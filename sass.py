@@ -218,7 +218,7 @@ def readSASS(filename):
 def dataToNC(yr, ip, subset):
     yr = str(yr)
     loc = ips[ip]['loc']
-    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'.nc')
+    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw.nc')
 #     print "dataToNC", sass_netfilename
     if not os.path.isfile(sass_netfilename):
         ncfile = Dataset(sass_netfilename, 'w', format='NETCDF4_CLASSIC')
