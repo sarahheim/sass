@@ -56,49 +56,49 @@ def createNCshell(ncfile, ip):
     time_dim = ncfile.createDimension('time', None) # unlimited axis (can be appended to).
     
     # Should units be CF, V spelt out???
-    time_var = ncfile.createVariable('time', np.int32, ('time'), fletcher32=True) # int64? Gives error
+    time_var = ncfile.createVariable('time', np.int32, ('time')) # int64? Gives error
 #     time_var.setncattr({'standard_name':'time', 'long_name': 'time', 'units':'seconds since 1970-01-01 00:00:00 UTC'})
     time_var.standard_name = 'time'
     time_var.units = 'seconds since 1970-01-01 00:00:00 UTC'
     time_var.long_name = 'time'
     #time_var.calendar = 'gregorian' #use??
-    sst = ncfile.createVariable('sst', 'f4', ('time'), fletcher32=True)
+    sst = ncfile.createVariable('sst', 'f4', ('time'))
     sst.standard_name = 'sea_water_temperature' 
     sst.long_name= 'sea water temperature'
     sst.units = 'celsius'
-    con = ncfile.createVariable('conductivity', 'f4', ('time'), fletcher32=True)
+    con = ncfile.createVariable('conductivity', 'f4', ('time'))
     con.standard_name = 'sea_water_electrical_conductivity'                           
     con.long_name= 'sea water electrical conductivity'
     con.units = 'S/m'
-    pres = ncfile.createVariable('pressure', 'f4', ('time'), fletcher32=True)
+    pres = ncfile.createVariable('pressure', 'f4', ('time'))
     pres.standard_name = 'sea_water_pressure'                           
     pres.long_name= 'sea water pressure'
     pres.units = 'dbar'
-    a1= ncfile.createVariable('aux1', 'f4', ('time'), fletcher32=True)
+    a1= ncfile.createVariable('aux1', 'f4', ('time'))
     a1.long_name= 'Auxiliary 1' # Use Standard name for 1,3,4???
     a1.units = 'V'
-    a3 = ncfile.createVariable('aux3', 'f4', ('time'), fletcher32=True)
+    a3 = ncfile.createVariable('aux3', 'f4', ('time'))
     a3.long_name= 'Auxiliary 3'
     a3.units = 'V'
-    chl = ncfile.createVariable('chlorophyll', 'f4', ('time'), fletcher32=True)
+    chl = ncfile.createVariable('chlorophyll', 'f4', ('time'))
     chl.standard_name = 'mass_concentration_of_chlorophyll_a_in_sea_water'
     chl.long_name= 'chlorophyll' 
     chl.units = 'V' #which CF name??? Wrong Units???
-    a4 = ncfile.createVariable('aux4', 'f4', ('time'), fletcher32=True)
+    a4 = ncfile.createVariable('aux4', 'f4', ('time'))
     a4.long_name= 'Auxiliary 4'
     a4.units = 'V'
-    sal = ncfile.createVariable('salinity', 'f4', ('time'), fletcher32=True)
+    sal = ncfile.createVariable('salinity', 'f4', ('time'))
     sal.standard_name = 'sea_water_salinity'                           
     sal.long_name= 'sea water salinity'
     sal.units = 'PSU'
-    sig = ncfile.createVariable('sigmat', 'f4', ('time'), fletcher32=True)
+    sig = ncfile.createVariable('sigmat', 'f4', ('time'))
     sig.standard_name = 'sea_water_density'                           
     sig.long_name= 'sea water density'
     sig.units = 'kg/m^3'
-    dV = ncfile.createVariable('diagnosticVoltage', 'f4', ('time'), fletcher32=True)
+    dV = ncfile.createVariable('diagnosticVoltage', 'f4', ('time'))
     dV.long_name= 'diagnostic voltage' #NO standard name???
     dV.units = 'V' 
-    cDr = ncfile.createVariable('currentDraw', 'f4', ('time'), fletcher32=True)
+    cDr = ncfile.createVariable('currentDraw', 'f4', ('time'))
     cDr.long_name= 'current draw' #NO standard name???
     cDr.units = 'mA'
 
@@ -218,7 +218,7 @@ def readSASS(filename):
 def dataToNC(yr, ip, subset):
     yr = str(yr)
     loc = ips[ip]['loc']
-    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw.nc')
+    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw_v1-bare.nc')
 #     print "dataToNC", sass_netfilename
     if not os.path.isfile(sass_netfilename):
         ncfile = Dataset(sass_netfilename, 'w', format='NETCDF4_CLASSIC')
