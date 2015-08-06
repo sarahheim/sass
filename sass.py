@@ -271,7 +271,7 @@ def readLastRecorded():
         return dateStr
     #file hasn't been created yet
     else:
-        return False #tupToISO(time.gmtime(0))
+        return '0001-01-01T00:00:00Z' #tupToISO(time.gmtime(0))
 
 def writeLastRecorded(dateStr):
     LRfile = open(os.path.join(ncpath, 'latestNCrec.txt'), 'w') #overwrite
