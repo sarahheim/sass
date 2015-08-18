@@ -52,7 +52,7 @@ attrArr = ['sst', 'conductivity', 'pressure', 'aux1', 'aux3', 'chlorophyll', #NO
 
 #CREATE NETCDF4 FILE STRUCTURE
 def createNCshell(ncfile, ip):
-    kwargs = {"zlib": True, "fletcher32":True}
+    kwargs = {"zlib": True}
     # Create Dimensions
     time_dim = ncfile.createDimension('time', None) # unlimited axis (can be appended to).
     
@@ -219,7 +219,7 @@ def readSASS(filename):
 def dataToNC(yr, ip, subset):
     yr = str(yr)
     loc = ips[ip]['loc']
-    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw_v5-zl-fl32T.nc')
+    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw.nc')
 #     print "dataToNC", sass_netfilename
     if not os.path.isfile(sass_netfilename):
         ncfile = Dataset(sass_netfilename, 'w', format='NETCDF4_CLASSIC')
