@@ -81,11 +81,11 @@ sass.ncpath = ncpath
 print sass.ncpath
 print filename
 sass.log2nc(filename)
-print "Made init file", time.time()-start
+print "DONE! Appended a single log file", time.time()-start
 
 #Append a few files
-sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150702.dat'))
-sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150703.dat'))
-sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150704.dat'))
+#sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150702.dat'))
+#sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150703.dat'))
+#sass.log2nc(os.path.join(sass.logsdir, '2015-07', 'data-20150704.dat'))
+#print "DONE! Appended a few log files", time.time()-start
 
-print "DONE! Appended a few log files", time.time()-start
