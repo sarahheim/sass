@@ -46,7 +46,7 @@ columns = ['server_date', 'ip', 'sst', 'conductivity', 'pressure', 'aux1',
                 'sigmat', 'diagnosticVoltage', 'currentDraw']
 
 attrArr = ['sst', 'conductivity', 'pressure', 'aux1', 'aux3', 'chlorophyll', #NOT INCLUDING 'time'
-           'chlorophyll', 'aux4', 'salinity', 'sigmat', 'diagnosticVoltage', 'currentDraw']
+           'aux4', 'salinity', 'sigmat', 'diagnosticVoltage', 'currentDraw']
 
 #####################################################################################################
 
