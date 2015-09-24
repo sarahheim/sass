@@ -26,32 +26,26 @@ def defaultRangeTest(x, bMin=None, qMin=None, qMax=None, bMax=None):
     else:
         return 1
     
-def pressureRangeTest(x):
-    if x < 2 or x > 4:
-        return 4
-    elif x < 2.3 or x > 3:
-        return 3
-    else:
-        return 1
-
 ###FLAG FOR LEVEL OF QC/TESTING!?!?!???###############
+###PUT TESTS in META!!!##############
 ### Look for outliers (over 2 st dev)?!???######
 ##### - allLogsToNCs.py check values against others in the day
 ##### - post processing against all other values in the year/file
+### Spike Test???
 
 #print sassLog[:3]
 #print 'MIN', sassLog.min()
 #print 'MEAN', sassLog.mean()
 #print 'MAX', sassLog.max()
 print 'sst', type(sassLog['sst'][0]) #sst is str?!!!
-print 'salinity', type(sassLog['salinity'][0])
+print 'sal', type(sassLog['salinity'][0])
 print 'chl', type(sassLog['chlorophyll'][0])
 print 'con', type(sassLog['conductivity'][0])
 print 'pre', type(sassLog['pressure'][0])
 
-#sassLog['sal_flag'] = sassLog['salinity'].map(lambda x: test(x))
-#sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: pressureRangeTest(x))
-sassLog['pres_flag2'] = sassLog['pressure'].map(lambda x: defaultRangeTest(x, None, 2, 4, 20))
+###qMin ==0 for sal, con, pres???
+sassLog['con_flag'] = sassLog['conductivity'].map(lambda x: defaultRangeTest(x, None, None, None, 9))
+sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: defaultRangeTest(x, None, None, None, 20))
 print sassLog[0:1200:90].to_csv()
 
 print "DONE! Appended a single log file", time.time()-start
