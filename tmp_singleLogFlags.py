@@ -33,13 +33,6 @@ def pressureRangeTest(x):
         return 3
     else:
         return 1
-def salinityRangeTest(x):
-    if x > 33:
-        return 4
-    elif x > 32.9:
-        return 3
-    else:
-        return 1
 
 ###FLAG FOR LEVEL OF QC/TESTING!?!?!???###############
 ### Look for outliers (over 2 st dev)?!???######
@@ -50,18 +43,15 @@ def salinityRangeTest(x):
 #print 'MIN', sassLog.min()
 #print 'MEAN', sassLog.mean()
 #print 'MAX', sassLog.max()
-print 'sst', type(sassLog['sst'][0])
+print 'sst', type(sassLog['sst'][0]) #sst is str?!!!
 print 'salinity', type(sassLog['salinity'][0])
 print 'chl', type(sassLog['chlorophyll'][0])
 print 'con', type(sassLog['conductivity'][0])
-#sassLog['sst_flag'] = sassLog['sst'].map(lambda x:3 if x > 20 else 1)
-
-#sassLog['sal_flag'] = sassLog['salinity'].map(lambda x:3 if x > 32.9 else 1)
-#sassLog['sal_flag'] = sassLog['salinity'].map(lambda x:4 if x > 33)
+print 'pre', type(sassLog['pressure'][0])
 
 #sassLog['sal_flag'] = sassLog['salinity'].map(lambda x: test(x))
-sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: pressureRangeTest(x))
+#sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: pressureRangeTest(x))
 sassLog['pres_flag2'] = sassLog['pressure'].map(lambda x: defaultRangeTest(x, None, 2, 4, 20))
-print sassLog[0:1200:45].to_csv()
+print sassLog[0:1200:90].to_csv()
 
 print "DONE! Appended a single log file", time.time()-start
