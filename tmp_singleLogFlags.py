@@ -21,7 +21,6 @@ def rangeTest(sassLog, attr, bMin, bMax, test):
     prim = attr+'_flagPrimary'
     sec = attr+'_flagSecondary'
     if not prim in sassLog:
-        print 'true'
         zeros = np.zeros(len(sassLog[attr]), dtype=int)
         primFlag = pandas.DataFrame(zeros, index=sassLog.index, columns=[prim])
         secFlag  = pandas.DataFrame(zeros, index=sassLog.index, columns=[sec])
@@ -67,17 +66,14 @@ def climateRangeTest(x, bMin=None, qMin=None, qMax=None, bMax=None):
 #print 'MIN', sassLog.min()
 #print 'MEAN', sassLog.mean()
 #print 'MAX', sassLog.max()
-print 'sst', type(sassLog['sst'][0]) #sst is str?!!!
-print 'sal', type(sassLog['salinity'][0])
-print 'chl', type(sassLog['chlorophyll'][0])
-print 'con', type(sassLog['conductivity'][0])
-print 'pre', type(sassLog['pressure'][0])
+#print sassLog.dtypes #fixed: sst used to be string
 
-###qMin ==0 for sal, con, pres???
-#sassLog['con_flag'] = sassLog['conductivity'].map(lambda x: rangeTest(x, None, None, None, 9))
 #sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: rangeTest(x, None, None, None, 20))
-#sassLog['pres_test'] = sassLog['pressure'].map(lambda x, i: i)
 sassLog = rangeTest(sassLog, 'pressure', 2, 4, -9) #test
+sassLog = rangeTest(sassLog, 'conductivity', None, 4.7, -9) #test
+sassLog = rangeTest(sassLog, 'salinity', 32.88, None, -9) #test
+sassLog = rangeTest(sassLog, 'sst', 16, 20, -9) #test
+
 #print type(sassLog['pressure'])
 print sassLog[0:1200:90].to_csv()
 
