@@ -78,7 +78,7 @@ def climateRangeTest(x, bMin=None, qMin=None, qMax=None, bMax=None):
 #sassLog = rangeTest(sassLog, 'salinity', -9, None, 32.88, 33.3, None) #test
 #sassLog = rangeTest(sassLog, 'sst', -9, 16, 18.3, 19, 20) #test
 
-#sensor range fail = 4, SoCal fail = 3 (suspect)
+#QC TESTS: sensor range fail = 4, SoCal fail = 3 (suspect)
 #sst tests: sensor range -5 to 35C, SoCal 8 to 30C
 sassLog = rangeTest(sassLog, 'sst', 2, -5, 8, 30, 35)
 #conductivity test: sensor range AND SoCal 0 to 9 s/m
@@ -87,7 +87,6 @@ sassLog = rangeTest(sassLog, 'conductivity', 2, 0, None, None, 9)
 sassLog = rangeTest(sassLog, 'salinity', 2, None, 30, 34.5, None)
 #pressure test: sensor range 0 to 20 dbar, SoCal 1 to 6 dbar
 sassLog = rangeTest(sassLog, 'pressure', 2, 0, 1, 6, 20) 
-
 
 #print type(sassLog['pressure'])
 print sassLog[0:1200:90].to_csv()
