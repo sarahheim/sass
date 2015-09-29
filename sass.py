@@ -46,7 +46,11 @@ columns = ['server_date', 'ip', 'sst', 'conductivity', 'pressure', 'aux1',
                 'sigmat', 'diagnosticVoltage', 'currentDraw']
 
 attrArr = ['sst', 'conductivity', 'pressure', 'aux1', 'aux3', 'chlorophyll', #NOT INCLUDING 'time'
-           'aux4', 'salinity', 'sigmat', 'diagnosticVoltage', 'currentDraw']
+           'aux4', 'salinity', 'sigmat', 'diagnosticVoltage', 'currentDraw',
+           'sst_flagPrimary', 'sst_flagSecondary', 
+           'conductivity_flagPrimary', 'conductivity_flagSecondary',
+           'pressure_flagPrimary', 'pressure_flagSecondary',
+           'salinity_flagPrimary', 'salinity_flagSecondary']
 
 #####################################################################################################
 
@@ -67,14 +71,26 @@ def createNCshell(ncfile, ip):
     sst.standard_name = 'sea_water_temperature' 
     sst.long_name= 'sea water temperature'
     sst.units = 'celsius'
+    sst_flagPrim = ncfile.createVariable('sst_flagPrimary', 'i1', ('time'), **kwargs)
+    sst_flagPrim.long_name= 'sea water temperature, qc primary flag'
+    sst_flagSec = ncfile.createVariable('sst_flagSecondary', 'i1', ('time'), **kwargs)
+    sst_flagSec.long_name= 'sea water temperature, qc secondary flag'
     con = ncfile.createVariable('conductivity', 'f4', ('time'), **kwargs)
     con.standard_name = 'sea_water_electrical_conductivity'                           
     con.long_name= 'sea water electrical conductivity'
     con.units = 'S/m'
+    con_flagPrim = ncfile.createVariable('conductivity_flagPrimary', 'i1', ('time'), **kwargs)
+    con_flagPrim.long_name= 'sea water electrical conductivity, qc primary flag'
+    con_flagSec = ncfile.createVariable('conductivity_flagSecondary', 'i1', ('time'), **kwargs)
+    con_flagSec.long_name= 'sea water electrical conductivity, qc secondary flag'
     pres = ncfile.createVariable('pressure', 'f4', ('time'), **kwargs)
     pres.standard_name = 'sea_water_pressure'                           
     pres.long_name= 'sea water pressure'
     pres.units = 'dbar'
+    pres_flagPrim = ncfile.createVariable('pressure_flagPrimary', 'i1', ('time'), **kwargs)
+    pres_flagPrim.long_name= 'sea water pressure, qc primary flag'
+    pres_flagSec = ncfile.createVariable('pressure_flagSecondary', 'i1', ('time'), **kwargs)
+    pres_flagSec.long_name= 'sea water pressure, qc secondary flag'
     a1= ncfile.createVariable('aux1', 'f4', ('time'), **kwargs)
     a1.long_name= 'Auxiliary 1' # Use Standard name for 1,3,4???
     a1.units = 'V'
@@ -92,6 +108,10 @@ def createNCshell(ncfile, ip):
     sal.standard_name = 'sea_water_salinity'                           
     sal.long_name= 'sea water salinity'
     sal.units = 'PSU'
+    sal_flagPrim = ncfile.createVariable('salinity_flagPrimary', 'i1', ('time'), **kwargs)
+    sal_flagPrim.long_name= 'sea water salinity, qc primary flag'
+    sal_flagSec = ncfile.createVariable('salinity_flagSecondary', 'i1', ('time'), **kwargs)
+    sal_flagSec.long_name= 'sea water salinity, qc secondary flag'
     sig = ncfile.createVariable('sigmat', 'f4', ('time'), **kwargs)
     sig.standard_name = 'sea_water_density'                           
     sig.long_name= 'sea water density'
@@ -245,21 +265,21 @@ def readSASS(filename):
 
     #QC TESTS: sensor range fail = 4, SoCal fail = 3 (suspect)
     #sst tests: sensor range -5 to 35C, SoCal 8 to 30C
-    sassLog = rangeTest(sassLog, 'sst', 2, -5, 8, 30, 35)
+    sass = rangeTest(sass, 'sst', 2, -5, 8, 30, 35)
     #conductivity test: sensor range AND SoCal 0 to 9 s/m
-    sassLog = rangeTest(sassLog, 'conductivity', 2, 0, None, None, 9)
+    sass = rangeTest(sass, 'conductivity', 2, 0, None, None, 9)
     #salinity test: SoCal 30 to 34.5 psu
-    sassLog = rangeTest(sassLog, 'salinity', 2, None, 30, 34.5, None)
+    sass = rangeTest(sass, 'salinity', 2, None, 30, 34.5, None)
     #pressure test: sensor range 0 to 20 dbar, SoCal 1 to 6 dbar
-    sassLog = rangeTest(sassLog, 'pressure', 2, 0, 1, 6, 20)
+    sass = rangeTest(sass, 'pressure', 2, 0, 1, 6, 20)
 
     return sass
 
 def dataToNC(yr, ip, subset):
     yr = str(yr)
     loc = ips[ip]['loc']
-    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_raw.nc')
-    print "dataToNC", sass_netfilename
+    sass_netfilename = os.path.join(ncpath, loc, loc+'_'+yr+'_qc2.nc')
+    #print "dataToNC", sass_netfilename
     if not os.path.isfile(sass_netfilename):
         ncfile = Dataset(sass_netfilename, 'w', format='NETCDF4_CLASSIC')
         ncfile = createNCshell(ncfile, ip)
