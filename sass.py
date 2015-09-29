@@ -199,6 +199,32 @@ def NCtimeMeta(ncfile, ip):
     ncfile.date_modified = time.ctime(time.time())
 
 ##############################################################################################
+def rangeTest(sassLog, attr, test, bMin=None, qMin=None, qMax=None, bMax=None):
+    prim = attr+'_flagPrimary'
+    sec = attr+'_flagSecondary'
+    if not prim in sassLog:
+        zeros = np.zeros(len(sassLog[attr]), dtype=int)
+        primFlag = pandas.DataFrame(zeros, index=sassLog.index, columns=[prim])
+        secFlag  = pandas.DataFrame(zeros, index=sassLog.index, columns=[sec])
+        sassLog = pandas.concat([sassLog, primFlag, secFlag], axis=1)
+    for i, x in enumerate(sassLog[attr]):
+        ### currently an int, assuming increment
+        ### could append string!!! or bit code number
+        sassLog.ix[i, sec] = test
+        #Failed this test (outside of BAD range)
+        if   (bMin and bMin >= x) or (bMax and bMax <= x):
+            sassLog.ix[i, prim]= 4
+        #Suspect this test (outside of SUSPECT range)
+        elif (qMin and qMin >= x) or (qMax and qMax <= x):
+            sassLog.ix[i, prim]= 3
+        #Passed (within range), no previous test or passed previous tests
+        elif (sassLog[prim][i] == 0) or (sassLog[sec][i] == 1) :
+            sassLog.ix[i, prim] = 1
+        #Passed (within range), but had previous issues - keep previous number
+        else:
+            sassLog.ix[i, prim] = sassLog[prim][i]
+    return sassLog
+
 def readSASS(filename):
     sass = pandas.read_csv(filename, header=None, parse_dates=[['date', 'time']], names= columns, 
                            infer_datetime_format=True)
@@ -216,6 +242,17 @@ def readSASS(filename):
     #make the instrument datetime the index
     sass.index = pandas.to_datetime(sass.pop('date_time'), format=' %d %b %Y  %H:%M:%S', utc=None)
     sass.index = sass.index.tz_localize('UTC')
+
+    #QC TESTS: sensor range fail = 4, SoCal fail = 3 (suspect)
+    #sst tests: sensor range -5 to 35C, SoCal 8 to 30C
+    sassLog = rangeTest(sassLog, 'sst', 2, -5, 8, 30, 35)
+    #conductivity test: sensor range AND SoCal 0 to 9 s/m
+    sassLog = rangeTest(sassLog, 'conductivity', 2, 0, None, None, 9)
+    #salinity test: SoCal 30 to 34.5 psu
+    sassLog = rangeTest(sassLog, 'salinity', 2, None, 30, 34.5, None)
+    #pressure test: sensor range 0 to 20 dbar, SoCal 1 to 6 dbar
+    sassLog = rangeTest(sassLog, 'pressure', 2, 0, 1, 6, 20)
+
     return sass
 
 def dataToNC(yr, ip, subset):
