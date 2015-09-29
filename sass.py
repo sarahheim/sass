@@ -205,7 +205,9 @@ def readSASS(filename):
     #STRIP bad lines
     sass = sass[sass.ip != '0.0.0.0'] #Don't include this ip
     sass = sass.dropna(subset=sass.columns, how='any') #Remove ANY lines with NaN
-    sass.sst = sass.sst.str.replace('#\s+', '') #Remove '#' in temp
+    sass.sst = sass.sst.str.replace('#\s+', '') #Remove '#' in temp, results in sst being a string
+    sass['sst'] = sass['sst'].astype(float) #change sst from a string to a float
+
     # Don't add any lines that already have been written
     sass['server_date_pandas'] = pandas.to_datetime(sass.server_date, format=dateformat, utc=None)
     LRpd = pandas.to_datetime(readLastRecorded(), utc=None)
