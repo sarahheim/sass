@@ -17,7 +17,7 @@ sassLog = sass.readSASS(filename)
 print type(sassLog)
 print sassLog.shape
 
-def rangeTest(sassLog, attr, bMin, bMax, test):
+def rangeTest(sassLog, attr, test, bMin=None, qMin=None, qMax=None, bMax=None):
     prim = attr+'_flagPrimary'
     sec = attr+'_flagSecondary'
     if not prim in sassLog:
@@ -29,9 +29,12 @@ def rangeTest(sassLog, attr, bMin, bMax, test):
         ### currently an int, assuming increment
         ### could append string!!! or bit code number
         sassLog.ix[i, sec] = test
-        #Failed this test (outside of range)
-        if (bMin and bMin >= x) or (bMax and bMax <= x):
+        #Failed this test (outside of BAD range)
+        if   (bMin and bMin >= x) or (bMax and bMax <= x):
             sassLog.ix[i, prim]= 4
+        #Suspect this test (outside of SUSPECT range)
+        elif (qMin and qMin >= x) or (qMax and qMax <= x):
+            sassLog.ix[i, prim]= 3
         #Passed (within range), no previous test or passed previous tests
         elif (sassLog[prim][i] == 0) or (sassLog[sec][i] == 1) :
             sassLog.ix[i, prim] = 1
@@ -69,10 +72,22 @@ def climateRangeTest(x, bMin=None, qMin=None, qMax=None, bMax=None):
 #print sassLog.dtypes #fixed: sst used to be string
 
 #sassLog['pres_flag'] = sassLog['pressure'].map(lambda x: rangeTest(x, None, None, None, 20))
-sassLog = rangeTest(sassLog, 'pressure', 2, 4, -9) #test
-sassLog = rangeTest(sassLog, 'conductivity', None, 4.7, -9) #test
-sassLog = rangeTest(sassLog, 'salinity', 32.88, None, -9) #test
-sassLog = rangeTest(sassLog, 'sst', 16, 20, -9) #test
+#TEST TESTS
+#sassLog = rangeTest(sassLog, 'pressure', -9, 2, 2.3, 3, 4) #test
+#sassLog = rangeTest(sassLog, 'conductivity', -9, 0, None, None, 4.7) #test
+#sassLog = rangeTest(sassLog, 'salinity', -9, None, 32.88, 33.3, None) #test
+#sassLog = rangeTest(sassLog, 'sst', -9, 16, 18.3, 19, 20) #test
+
+#sensor range fail = 4, SoCal fail = 3 (suspect)
+#sst tests: sensor range -5 to 35C, SoCal 8 to 30C
+sassLog = rangeTest(sassLog, 'sst', 2, -5, 8, 30, 35)
+#conductivity test: sensor range AND SoCal 0 to 9 s/m
+sassLog = rangeTest(sassLog, 'conductivity', 2, 0, None, None, 9)
+#salinity test: SoCal 30 to 34.5 psu
+sassLog = rangeTest(sassLog, 'salinity', 2, None, 30, 34.5, None)
+#pressure test: sensor range 0 to 20 dbar, SoCal 1 to 6 dbar
+sassLog = rangeTest(sassLog, 'pressure', 2, 0, 1, 6, 20) 
+
 
 #print type(sassLog['pressure'])
 print sassLog[0:1200:90].to_csv()
