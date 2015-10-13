@@ -139,7 +139,7 @@ def createNCshell(ncfile, ip):
     ncfile.keywords_vocabulary = 'Global Change Master Directory (GCMD) Earth Science Keywords'
     ncfile.standard_name_vocabulary = 'CF Standard Name Table (v28, 07 January 2015)'
     ncfile.history = 'Created: '+ time.ctime(time.time())
-    ncfile.comment = 'The SIO Pier automated shore station operated by SCCOOS is mounted at a nominal'+ \
+    ncfile.comment = 'The '+ips[ip]['loc_name']+' automated shore station operated by '+ips[ip]['inst']+' is mounted at a nominal'+ \
     ' depth of '+str(ips[ip]['depth'])+' meters MLLW. The instrument package includes a Seabird SBE 16plus SEACAT Conductivity, '+ \
     'Temperature, and Pressure recorder, and a Seapoint Chlorophyll Fluorometer with a 0-50 ug/L gain setting.'
 

@@ -95,4 +95,4 @@ def appendToNCs(logfile):
 
 logfileLoc = '/data/InSitu/SASS/code/log2nc/appendLog.txt'
 rt = appendToNCs(logfileLoc)
-#print "called", rt
+print "DONE!", datetime.datetime.now(), "runtime:", rt
